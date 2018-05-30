@@ -2,11 +2,11 @@
 import numpy as np
 import cv2 as cv
 import os
+face_cascade = cv.CascadeClassifier('haarcascade_frontalface_default.xml')
 
-def face_detection(filename):
-    face_cascade = cv.CascadeClassifier('haarcascade_frontalface_default.xml')
-    img = cv.imread(filename)
 base_path = "c:/base"
+def face_detection(path, filename):
+    img = cv.imread(path  + "/" + filename)
     gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
     height, width, channels = img.shape
@@ -35,9 +35,19 @@ base_path = "c:/base"
     cv.waitKey(0)
 
 def main():
+    begin = False
     for (path, dir, files) in os.walk(base_path):
         for filename in files:
-            face_detection(path + "/" + filename)
+            if not begin and filename == '':
+                begin = True
+
+            if begin:
+                if filename.endswith(".jpg"):
+                    try :
+                        print(filename)
+                        face_detection(path, filename)
+                    except:
+                        pass
 
     cv.destroyAllWindows()
 
